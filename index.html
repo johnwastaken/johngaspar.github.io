@@ -18,6 +18,27 @@
     <link href="assets/css/main.css" rel="stylesheet">
     <!-- Themes -->
     <link href="assets/css/themes.light.css" rel="stylesheet">
+    <!-- Custom Header Animation Styles -->
+    <style>
+        .o-section--header {
+            position: relative;
+            overflow: hidden;
+        }
+        #header-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.35;
+        }
+        .o-section--header .c-header {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
     <!-- jQuery -->
     <script src="assets/js/jquery.min.js">
     </script>
@@ -44,6 +65,7 @@
         <!-- ############ HEADER ############ -->
         <!-- ################################ -->
         <section class="o-section o-section--header t-section t-section--header">
+            <canvas id="header-canvas"></canvas>
             <div class="c-header">
                 <div class="o-section__header-bg t-section__header"></div>
                 <div class="o-section__content-bg t-section__content"></div>
@@ -284,7 +306,7 @@
                                 <a href="https://mic.com/articles/110052/scientists-want-to-unlock-the-secrets-of-distraction-and-use-them-to-your-advantage#.h9evSdCcA" target="_blank"><img alt="" src="assets/images/clients/mic.png"></a>
                             </li>
                             <li>
-                                <a href="https://https://www.ctvnews.ca/lifestyle/article/lessons-in-efficiency-how-smart-people-ignore-distractions/" target="_blank"><img alt="" src="assets/images/clients/ctv.png"></a>
+                                <a href="https://www.ctvnews.ca/lifestyle/article/lessons-in-efficiency-how-smart-people-ignore-distractions/" target="_blank"><img alt="" src="assets/images/clients/ctv.png"></a>
                             </li>
                             <li>
                                 <a href="https://www.pnas.org/content/113/13/3422.full" target="_blank"><img alt="" src="assets/images/clients/pnas.png"></a>
@@ -367,7 +389,7 @@
                                                 <ul style="list-style-type:square;">
 						<li>Lead a team of highly-skilled FTE UXRs in conducting end-to-end user research that connects attitudinal measures with both behavioral and business metrics.</li>
 						<li>Work collaboratively with cross-functional teams that include designers, engineers, and product managers to convert research into meaningful recommendations, best practices, and product advancements.</li>
-						<li>Oversee the design, analysis, and dissemination of research studies on both small (n < 10) and large (n > 40k) samples.</li>
+						<li>Oversee the design, analysis, and dissemination of research studies on both small (n &lt; 10) and large (n &gt; 40k) samples.</li>
 						<li>Develop roadmaps and iterative research programs that support stakeholder needs and are in line with company- and org-level OKRs.</li>
 						<li>Possess advanced knowledge in advanced survey methodologies (e.g. Maxdiff, CBC), graphic design, data visualization, dashboarding, and video editing.</li>
 						<li>Have received 35 peer recognition (gThanks) awards for going above and beyond.</li>	
@@ -613,7 +635,7 @@
                                 <a class="c-image-overlay t-image-overlay js-lightbox" data-lightbox-gallery="portfolio" data-lightbox-hidpi="" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7112167/" title="Electrophysiological evidence that psychopathic personality traits are associated with atypical response to salient distractors"><img alt="" src="assets/images/portfolio/11_thumb.jpg"></a>
                             </div>					
                             <div class="o-grid__col-sm-6">
-                                <a class="c-image-overlay t-image-overlay js-lightbox" data-lightbox-gallery="portfolio" data-lightbox-hidpi="" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sdtp.12842" title="The effect of larger field‐of‐view on visual search times for world‐locked augmented reality objects"><img alt="" src="assets/images/portfolio/9_thumb.jpg"></a>
+                                <a class="c-image-overlay t-image-overlay js-lightbox" data-lightbox-gallery="portfolio" data-lightbox-hidpi="" href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sdtp.12842" title="The effect of larger field–of–view on visual search times for world–locked augmented reality objects"><img alt="" src="assets/images/portfolio/9_thumb.jpg"></a>
                             </div>				
                             <div class="o-grid__col-sm-6">
                                 <a class="c-image-overlay t-image-overlay js-lightbox" data-lightbox-gallery="portfolio" data-lightbox-hidpi="" href="https://www.cambridge.org/core/journals/psychological-medicine/article/people-with-schizophrenia-show-enhanced-cognitive-costs-of-maintaining-a-single-item-in-working-memory/9F8FB1913FFBDC97431CF226CB2919BF" title="People with schizophrenia show enhanced cognitive costs of maintaining a single item in working memory"><img alt="" src="assets/images/portfolio/8_thumb.jpg"></a>
@@ -907,6 +929,73 @@
     </div>
     <!-- /c-main-container -->
 
+    <!-- Canvas Animation Script -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const canvas = document.getElementById('header-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        function resize() {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particleCount = window.innerWidth < 768 ? 25 : 45;
+        const particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.35,
+                vy: (Math.random() - 0.5) * 0.35,
+                radius: Math.random() * 1.5 + 1
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            ctx.fillStyle = 'rgba(110, 130, 155, 0.45)';
+            ctx.strokeStyle = 'rgba(110, 130, 155, 0.1)';
+
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 130) {
+                        ctx.lineWidth = 1 - (dist / 130);
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    });
+    </script>
 </body>
 
 </html>
